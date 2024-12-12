@@ -36,7 +36,7 @@ services:
     restart: always
     ports:
       - 8080:8080
-  db:
+  database: # <- Service name
     image: postgres:${POSTGRES_VERSION:-15}
     restart: always
     environment:
