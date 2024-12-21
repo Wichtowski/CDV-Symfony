@@ -19,18 +19,19 @@ final class Version20241219220547 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE articles ADD author_id INT DEFAULT NULL');
-        $this->addSql('ALTER TABLE articles ADD CONSTRAINT FK_BFDD3168F675F31B FOREIGN KEY (author_id) REFERENCES authors (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
-        $this->addSql('CREATE INDEX IDX_BFDD3168F675F31B ON articles (author_id)');
+        // Check if 'author_id' column exists before adding it to 'articles' table
+        if (!$schema->getTable('articles')->hasColumn('author_id')) {
+            $this->addSql('ALTER TABLE articles ADD author_id INT DEFAULT NULL');
+            $this->addSql('ALTER TABLE articles ADD CONSTRAINT FK_BFDD3168F675F31B FOREIGN KEY (author_id) REFERENCES authors (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+            $this->addSql('CREATE INDEX IDX_BFDD3168F675F31B ON articles (author_id)');
+        }
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE SCHEMA public');
         $this->addSql('ALTER TABLE articles DROP CONSTRAINT FK_BFDD3168F675F31B');
         $this->addSql('DROP INDEX IDX_BFDD3168F675F31B');
-        $this->addSql('ALTER TABLE articles DROP author_id');
+        $this->addSql('ALTER TABLE articles DROP COLUMN author_id');
     }
 }

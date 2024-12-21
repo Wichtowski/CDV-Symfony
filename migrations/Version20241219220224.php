@@ -19,14 +19,15 @@ final class Version20241219220224 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TABLE authors (id SERIAL NOT NULL, name VARCHAR(100) NOT NULL, category TEXT NOT NULL, PRIMARY KEY(id))');
+        // Check if the 'authors' table already exists before creating it
+        if (!$schema->getTable('authors')) {
+            $this->addSql('CREATE TABLE authors (id SERIAL NOT NULL, name VARCHAR(100) NOT NULL, category TEXT NOT NULL, PRIMARY KEY(id))');
+        }
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE SCHEMA public');
-        $this->addSql('DROP TABLE authors');
+        $this->addSql('DROP TABLE IF EXISTS authors');
     }
 }
