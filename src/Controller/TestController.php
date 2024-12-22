@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TestController extends AbstractController
 {
-    #[Route('/test', 'test')]
+    #[Route('/', 'test')]
     public function index(): Response
     {
         return new Response('Hello world!');

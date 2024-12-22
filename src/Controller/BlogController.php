@@ -15,13 +15,10 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class BlogController extends AbstractController
 {
-    private ArticlesRepository $articlesRepository;
-
-    private string $responseStart;
-
-    public function __construct(ArticlesRepository $articlesRepository)
-    {
-        $this->articlesRepository = $articlesRepository;
+    public function __construct(
+        private ArticlesRepository $articlesRepository,
+        private string $responseStart = ''
+    ) {
         $this->responseStart = $this->getResponseStartHTML();
     }
 
