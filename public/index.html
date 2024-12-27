@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <title>Articles</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Articles</h1>
+        <ul id="articles-list"></ul>
+        <button>Add Article</button>
+        <button>Add Author</button>
+    </div>
+</body>
+</html>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const articlesList = document.getElementById("articles-list");
+
+    fetch("/api/articles/get/all")
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(article => {
+                const li = document.createElement("li");
+                li.innerHTML = `
+                    <h4>${article.title}</h4>
+                    <button onclick="viewArticle(${article.id})">Read More</button>
+                `;
+                articlesList.appendChild(li);
+            });
+        })
+        .catch(error => {
+            console.error("Error fetching articles:", error);
+        articlesList.innerHTML = "<li>Error loading articles</li>";
+    });
+});
+
+</script>

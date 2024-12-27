@@ -19,6 +19,16 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+    # config/services.yaml
+
+#     App\Controller\ErrorController:
+#         public: true
+#         tags:
+#             - { name: controller.service_arguments }
+
+# framework:
+#     error_controller: App\Controller\ErrorController::show
+
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

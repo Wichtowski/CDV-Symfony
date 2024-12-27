@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityManagerInterface;
 
+#[Route('/authors', name: 'authors_')]
 class AuthorsController extends AbstractController
 {
     private AuthorsRepository $authorsRepository;
@@ -51,7 +52,7 @@ class AuthorsController extends AbstractController
         ]);
     }
 
-    #[Route('/api/author', name: 'api_create_author', methods: ['POST'])]
+    #[Route('/api/authors', name: 'api_create_author', methods: ['POST'])]
     public function createAuthor(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         try {
