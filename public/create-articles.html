@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./index.css">
+    <link rel="stylesheet" href="../index.css">
     <title>Add Article</title>
 </head>
 
@@ -24,13 +24,10 @@
         </form>
         <div id="error" style="color: red; margin: 6px;"></div>
         <div id="success" style="color: green; margin: 6px;"></div>
-        <div style="display: flex; flex-direction: row;">
-            <button class="back-button" onclick='window.location.href="https://localhost/articles"'>
-                Back to Articles
-            </button>
-            <button class="back-button" onclick='window.location.href="https://localhost/author/add"'>
-                Create New Author
-            </button>
+        <div class="buttonsContainer">
+            <button class="content-button" onclick="window.location.href='/'">Go to Index</button>
+            <button class="content-button" onclick="window.location.href='/authors'">Go to Authors</button>
+            <button class="content-button" onclick="window.location.href='/articles'">Go to Articles</button>
         </div>
     </div>
     <script>

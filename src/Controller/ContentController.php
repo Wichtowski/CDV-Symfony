@@ -22,6 +22,6 @@ class ContentController extends AbstractController
         
         return new Response(file_get_contents($htmlFilePath), 200, [
             'Content-Type' => 'text/html',
-            ]);
+        ]);
     }
 }
