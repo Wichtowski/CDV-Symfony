@@ -2,52 +2,78 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\User;
 use App\Entity\Articles;
-use App\Entity\Authors;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
+    private UserPasswordHasherInterface $passwordHasher;
+
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    {
+        $this->passwordHasher = $passwordHasher;
+    }
 
     public function load(ObjectManager $manager): void
     {
-        $author1 = new Authors();
-        $author1->setName('J.K. Rowling')
-            ->setCategory('Fantasy');
-        $manager->persist($author1);
+        $user = new User();
+        $hashedPassword = $this->passwordHasher->hashPassword($user, 'password123');
+        
+        $user->setName('J.K. Rowling');
+        $user->setEmail('jk.rowling@example.com');
+        $user->setRole('author');
+        $user->setPassword($hashedPassword);
+
+        $manager->persist($user);
+
+        $user2 = new User();
+        $hashedPassword2 = $this->passwordHasher->hashPassword($user2, 'password456');
+        
+        $user2->setName('George R.R. Martin');
+        $user2->setEmail('george.martin@example.com');
+        $user2->setRole('author');
+        $user2->setPassword($hashedPassword2);
+
+        $manager->persist($user2);
+
+        $user3 = new User();
+        $hashedPassword3 = $this->passwordHasher->hashPassword($user3, 'password789');
+        
+        $user3->setName('J.R.R. Tolkien');
+        $user3->setEmail('tolkien@example.com');
+        $user3->setRole('author');
+        $user3->setPassword($hashedPassword3);
+
+        $manager->persist($user3);
+        $manager->flush();
 
         $article1 = new Articles();
-        $article1->setTitle('The Boy Who Lived')
-            ->setContent('In a cupboard under the stairs, a young boy discovers his true heritage and embarks on a magical journey.')
-            ->setAuthor($author1)
-            ->setCreatedAt(new \DateTime());
+        $article1->setTitle('Harry Potter');
+        $article1->setContent('Content of the first Harry Potter book.');
+        $article1->setShortDescription('A young wizard\'s journey begins.');
+        $article1->setAuthor($user);
+        $article1->setCreatedAt(new \DateTime());
         $manager->persist($article1);
-
-        $author2 = new Authors();
-        $author2->setName('Stephen King')
-            ->setCategory('Horror');
-        $manager->persist($author2);
-
+        
         $article2 = new Articles();
-        $article2->setTitle('The Shining')
-            ->setContent('A family heads to an isolated hotel for the winter where an evil presence influences the father into violence.')
-            ->setAuthor($author2)
-            ->setCreatedAt(new \DateTime());
+        $article2->setTitle('A Game of Thrones');
+        $article2->setContent('Content of the first book in A Song of Ice and Fire series.');
+        $article2->setShortDescription('A tale of power and betrayal in the Seven Kingdoms.');
+        $article2->setAuthor($user2);
+        $article2->setCreatedAt(new \DateTime());
         $manager->persist($article2);
-
-        $author3 = new Authors();
-        $author3->setName('H.P. Lovecraft')
-            ->setCategory('Horror');
-        $manager->persist($author3);
-
+        
         $article3 = new Articles();
-        $article3->setTitle('The Call of Cthulhu')
-            ->setContent('An investigation into the ancient and monstrous entity known as Cthulhu leads to terrifying discoveries.')
-            ->setAuthor($author3)
-            ->setCreatedAt(new \DateTime());
+        $article3->setTitle('The Hobbit');
+        $article3->setContent('Content of The Hobbit book...');
+        $article3->setShortDescription('A hobbit\'s adventure to reclaim a lost kingdom.');
+        $article3->setAuthor($user3);
+        $article3->setCreatedAt(new \DateTime());
         $manager->persist($article3);
-
+        
         $manager->flush();
     }
 }

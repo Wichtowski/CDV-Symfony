@@ -77,19 +77,6 @@ button {
 }
 
 button:hover {
-    background-color: #218838;
-    transition: 0.3s;
-}
-
-.back-button {
-    display: block;
-    margin: 16px auto 0;
-    background-color: #28a745;
-    color: white;
-    transition: 0.3s;
-}
-
-.back-button:hover {
-    background-color: #218838;
+    background-color: #165e26;
     transition: 0.3s;
 }

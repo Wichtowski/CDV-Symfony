@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <title>Add Author</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Add a New Author</h1>
+        <form method="POST" action="https://localhost/api/authors" id="authorForm">
+            <label for="authorName">Author Name:</label>
+            <input type="text" id="authorName" name="authorName" required>
+            <label for="category">Categoty:</label>
+            <input type="text" id="category" name="category" required>
+            <button type="submit">Add Author</button>
+        </form>
+        <div id="authorError" style="color: red; margin: 6px;"></div>
+        <div id="authorSuccess" style="color: green; margin: 6px;"></div>
+        <div style="display: flex; flex-direction: row;">
+            <button class="back-button" onclick='window.location.href="https://localhost/articles"'>
+                Back to Articles
+            </button>
+            <button class="back-button" onclick='window.location.href="https://localhost/articles/create"'>
+                Create New Article
+            </button>
+        </div>
+    </div>
+    <script>
+        document.getElementById('authorForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const form = event.target;
+            const formData = {
+                name: form.authorName.value,
+                category: form.category.value
+            };
+
+            const response = await fetch('https://localhost/api/authors', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            });
+
+            const errorDiv = document.getElementById('authorError');
+            const successDiv = document.getElementById('authorSuccess');
+            if (response.ok) {
+                errorDiv.textContent = '';
+                successDiv.textContent = 'Author added successfully!';
+                form.reset();
+            } else {
+                const error = await response.json();
+                errorDiv.textContent = `Error: ${error.error}`;
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -5,15 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="index.css">
-    <title>Authors</title>
+    <title>Articles</title>
 </head>
 
 <body>
     <div class="container">
-        <h1>Authors</h1>
+        <h1>Articles</h1>
         <ul id="load-content"></ul>
         <button class="go-back" onclick="window.location.href = '/'">Go Back</button>
-        <!-- <button id="load-button"></button> -->
     </div>
 </body>
 
@@ -22,8 +21,8 @@
 <script src="load-content.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        loadContent("authors");
-        createButtonWithPermission("Create Author", "/authors/create");
-    });
+        loadContent("articles");
 
+        createButtonWithPermission("Create Article", "/articles/create");
+    });
 </script>

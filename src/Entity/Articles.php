@@ -18,9 +18,12 @@ class Articles
     #[ORM\Column(type: 'text')]
     private ?string $content = null;
 
-    #[ORM\ManyToOne(targetEntity: Authors::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: 'author_id', referencedColumnName: 'id')]
-    private ?Authors $author = null;
+    private ?User $author = null;
+
+    #[ORM\Column(type: 'datetime')]
+    private ?\DateTimeInterface $createdAt = null;
 
     public function getId(): ?int
     {
@@ -49,19 +52,16 @@ class Articles
         return $this;
     }
 
-    public function getAuthor(): ?Authors
+    public function getAuthor(): ?User
     {
         return $this->author;
     }
 
-    public function setAuthor(Authors $author): static
+    public function setAuthor(User $author): static
     {
         $this->author = $author;
         return $this;
     }
-
-    #[ORM\Column(type: 'datetime')]
-    private ?\DateTimeInterface $createdAt = null;
 
     public function getCreatedAt(): ?\DateTimeInterface
     {

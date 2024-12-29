@@ -37,7 +37,7 @@
         document.addEventListener('DOMContentLoaded', async () => {
             const authorSelect = document.getElementById('author');
             try {
-                const response = await fetch('https://localhost/api/authors');
+                const response = await fetch('https://localhost/api/authors/get/all');
                 if (response.ok) {
                     const authors = await response.json();
                     authors.forEach(author => {
@@ -54,6 +54,7 @@
                 alert('An error occurred while loading authors');
             }
         });
+
         document.getElementById('articleForm').addEventListener('submit', async (event) => {
             event.preventDefault();
             const form = event.target;
@@ -62,7 +63,7 @@
                 content: form.content.value,
             };
 
-            const response = await fetch('https://localhost/api/articles', {
+            const response = await fetch('https://localhost/api/articles/post/create', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),

@@ -2,12 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
+use App\Repository\UsersRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Entity(repositoryClass: UsersRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -20,17 +20,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180)]
     private ?string $email = null;
 
-    /**
-     * @var list<string> The user roles
-     */
-    #[ORM\Column]
-    private array $roles = [];
+    #[ORM\Column(type: "string", columnDefinition: "ENUM('admin', 'guest', 'author', 'moderator')", nullable: false)]
+    private $role;
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $name = null;
 
     public function getId(): ?int
     {
@@ -59,28 +59,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     *
-     * @return list<string>
-     */
-    public function getRoles(): array
+    public function getRole(): string
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        return $this->role;
+    }
 
-        return array_unique($roles);
+    public function setRole(string $role): self
+    {
+        if (!in_array($role, ['admin', 'guest', 'author', 'moderator'])) {
+            throw new \InvalidArgumentException("Invalid role");
+        }
+        $this->role = $role;
+
+        return $this;
     }
 
     /**
-     * @param list<string> $roles
+     * @see UserInterface
      */
-    public function setRoles(array $roles): static
+    public function getRoles(): array
     {
-        $this->roles = $roles;
-
-        return $this;
+        // Symfony expects roles as an array, even if there's only one role
+        return [$this->role];
     }
 
     /**
@@ -105,5 +105,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
     }
 }
