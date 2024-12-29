@@ -32,5 +32,15 @@ services:
     App\Service\PermissionService:
         arguments: []
 
+    # App\Service\MongoDBLogger:
+    #     arguments:
+    #         $server: '%mongodb.server%'
+    #         $options: '%mongodb.options%'
+    #         $database: '%mongodb.database%'
+
+    # App\EventListener\ApiRequestListener:
+    #     tags:
+    #         - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

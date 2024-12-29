@@ -10,12 +10,14 @@
 
 <body>
     <div class="container">
-        <h1>Author</h1>
-        <h3 id="name"></h3>
+        <h1 id="name"></h1>
         <span id="error"></span>
         <div class="load-authors-articles"></div>
-        <button onclick="window.location.href = '/'">Go Back</button>
-        <button onclick="window.location.href='/articles'">Go to Articles</button>
+        <div class="buttonsContainer">
+            <button class="content-button" onclick="window.location.href='/'">Go to Index</button>
+            <button class="content-button" onclick="window.location.href='/authors'">Go to Authors</button>
+            <button class="content-button" onclick="window.location.href='/articles'">Go to Articles</button>
+        </div>
     </div>
 </body>
 
@@ -45,7 +47,12 @@
                 } else {
                     data.forEach(article => {
                         const articleElement = document.createElement("div");
-                        articleElement.innerHTML = `<h4>${article.title}</h4><p>${article.content}</p>`;
+                        articleElement.classList.add("card");
+                        articleElement.innerHTML = `
+                            <h4 class="content-heading">${article.title}</h4>
+                            <p>${article.content}</p>
+                            <button class="content-button" onclick="window.location.href='/articles/${article.id}'">Read More</button>
+                        `;
                         articlesContainer.appendChild(articleElement);
                     });
                 }

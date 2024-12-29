@@ -13,6 +13,8 @@ body {
     background: #1e1e1e;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
 }
 
 h1 {
@@ -58,6 +60,7 @@ ul {
     width: 80%;
     min-width: 300px;
 }
+
 li {
     margin: 10px 0;
     display: flex;
@@ -65,6 +68,7 @@ li {
     justify-content: space-between;
     width: 100%;
 }
+
 button {
     background-color: #28a745;
     color: white;
@@ -79,4 +83,57 @@ button {
 button:hover {
     background-color: #165e26;
     transition: 0.3s;
+}
+
+.card {
+    background-color: #2e2e2e;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.articles-card {
+    width: 100%;
+}
+
+.articles-card h2 {
+    text-align: center;
+}
+
+.card h4 {
+    margin: 0;
+    margin-top: 10px;
+}
+
+.card button {
+    width: 100px;
+}
+
+.container-index {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
+
+.content-heading {
+    width: 100%;
+    text-align: center;
+}
+
+.content-button {
+    width: fit-content;
+    margin: 0 auto;
+    margin-top: 6px;
+}
+
+.buttonsContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
 }

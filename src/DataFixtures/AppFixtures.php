@@ -19,61 +19,45 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        $user = new User();
-        $hashedPassword = $this->passwordHasher->hashPassword($user, 'password123');
-        
-        $user->setName('J.K. Rowling');
-        $user->setEmail('jk.rowling@example.com');
-        $user->setRole('author');
-        $user->setPassword($hashedPassword);
+        $usersData = [
+            ['name' => 'J.K. Rowling', 'email' => 'jk.rowling@example.com', 'password' => 'password123'],
+            ['name' => 'George R.R. Martin', 'email' => 'george.martin@example.com', 'password' => 'password456'],
+            ['name' => 'J.R.R. Tolkien', 'email' => 'tolkien@example.com', 'password' => 'password789'],
+        ];
 
-        $manager->persist($user);
+        $users = [];
+        foreach ($usersData as $userData) {
+            $user = new User();
+            $hashedPassword = $this->passwordHasher->hashPassword($user, $userData['password']);
+            $user->setName($userData['name']);
+            $user->setEmail($userData['email']);
+            $user->setRole('author');
+            $user->setPassword($hashedPassword);
+            $manager->persist($user);
+            $users[] = $user;
+        }
 
-        $user2 = new User();
-        $hashedPassword2 = $this->passwordHasher->hashPassword($user2, 'password456');
-        
-        $user2->setName('George R.R. Martin');
-        $user2->setEmail('george.martin@example.com');
-        $user2->setRole('author');
-        $user2->setPassword($hashedPassword2);
-
-        $manager->persist($user2);
-
-        $user3 = new User();
-        $hashedPassword3 = $this->passwordHasher->hashPassword($user3, 'password789');
-        
-        $user3->setName('J.R.R. Tolkien');
-        $user3->setEmail('tolkien@example.com');
-        $user3->setRole('author');
-        $user3->setPassword($hashedPassword3);
-
-        $manager->persist($user3);
         $manager->flush();
 
-        $article1 = new Articles();
-        $article1->setTitle('Harry Potter');
-        $article1->setContent('Content of the first Harry Potter book.');
-        $article1->setShortDescription('A young wizard\'s journey begins.');
-        $article1->setAuthor($user);
-        $article1->setCreatedAt(new \DateTime());
-        $manager->persist($article1);
-        
-        $article2 = new Articles();
-        $article2->setTitle('A Game of Thrones');
-        $article2->setContent('Content of the first book in A Song of Ice and Fire series.');
-        $article2->setShortDescription('A tale of power and betrayal in the Seven Kingdoms.');
-        $article2->setAuthor($user2);
-        $article2->setCreatedAt(new \DateTime());
-        $manager->persist($article2);
-        
-        $article3 = new Articles();
-        $article3->setTitle('The Hobbit');
-        $article3->setContent('Content of The Hobbit book...');
-        $article3->setShortDescription('A hobbit\'s adventure to reclaim a lost kingdom.');
-        $article3->setAuthor($user3);
-        $article3->setCreatedAt(new \DateTime());
-        $manager->persist($article3);
-        
+        $articlesData = [
+            ['title' => 'Harry Potter', 'content' => 'A young wizard\'s journey begins.', 'author' => $users[0]],
+            ['title' => 'A Game of Thrones', 'content' => 'A tale of power and betrayal in the Seven Kingdoms.', 'author' => $users[1]],
+            ['title' => 'A Clash of Kings', 'content' => 'The Seven Kingdoms face new threats as winter approaches.', 'author' => $users[1]],
+            ['title' => 'A Storm of Swords', 'content' => 'The war for the Iron Throne intensifies.', 'author' => $users[1]],
+            ['title' => 'A Feast for Crows', 'content' => 'The aftermath of the war leaves the Seven Kingdoms in turmoil.', 'author' => $users[1]],
+            ['title' => 'A Dance with Dragons', 'content' => 'New alliances and betrayals shape the fate of the Seven Kingdoms.', 'author' => $users[1]],
+            ['title' => 'The Hobbit', 'content' => 'A hobbit\'s adventure to reclaim a lost kingdom.', 'author' => $users[2]],
+        ];
+
+        foreach ($articlesData as $articleData) {
+            $article = new Articles();
+            $article->setTitle($articleData['title']);
+            $article->setContent($articleData['content']);
+            $article->setAuthor($articleData['author']);
+            $article->setCreatedAt(new \DateTime());
+            $manager->persist($article);
+        }
+
         $manager->flush();
     }
 }

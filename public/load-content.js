@@ -7,8 +7,10 @@ function loadContent(object) {
             data.forEach(item => {
                 const li = document.createElement("li");
                 li.innerHTML = `
-                    <h4>${item.name || item.title}</h4>
-                    <button onclick="window.location.href = '${object}/${item.id}'">See More</button>
+                    <div class="card articles-card">
+                        <h2 class="content-heading">${item.name || item.title}</h2>
+                        <button class="content-button" onclick="window.location.href = '${object}/${item.id}'">See More</button>
+                    </div>
                 `;
 
                 loadable.appendChild(li);

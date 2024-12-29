@@ -16,7 +16,7 @@ class ArticlesRepository extends ServiceEntityRepository
         parent::__construct($registry, Articles::class);
     }
 
-    public function findAllByAuthorId(int $id): array
+    public function findAllArbiclesByAuthorId(int $id): array
     {
         return $this->createQueryBuilder('a')
             ->andWhere('a.author = :id')

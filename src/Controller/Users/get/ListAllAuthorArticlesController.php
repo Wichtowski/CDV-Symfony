@@ -21,7 +21,7 @@ class ListAllAuthorArticlesController extends AbstractController
     #[Route('/api/articles/get/author/{id}', name: 'api_articles_list_authors_all', methods: ['GET'])]
     public function listAuthors(int $id): JsonResponse
     {
-        $authorsArticles = $this->articlesRepository->findAllByAuthorId($id);
+        $authorsArticles = $this->articlesRepository->findAllArbiclesByAuthorId($id);
         $data = [];
     
         foreach ($authorsArticles as $article) {
