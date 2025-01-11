@@ -18,12 +18,15 @@ class Articles
     #[ORM\Column(type: 'text')]
     private ?string $content = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(name: 'author_id', referencedColumnName: 'id')]
-    private ?User $author = null;
+    #[ORM\ManyToOne(targetEntity: Users::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Users $author = null;
 
     #[ORM\Column(type: 'datetime')]
     private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\Column(options: ["default" => false])]
+    private ?bool $isPublished = false;
 
     public function getId(): ?int
     {
@@ -52,12 +55,12 @@ class Articles
         return $this;
     }
 
-    public function getAuthor(): ?User
+    public function getAuthor(): ?Users
     {
         return $this->author;
     }
 
-    public function setAuthor(User $author): static
+    public function setAuthor(?Users $author): static
     {
         $this->author = $author;
         return $this;
@@ -71,6 +74,18 @@ class Articles
     public function setCreatedAt(\DateTimeInterface $createdAt): static
     {
         $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    public function isPublished(): ?bool
+    {
+        return $this->isPublished;
+    }
+
+    public function setPublished(bool $isPublished): static
+    {
+        $this->isPublished = $isPublished;
+
         return $this;
     }
 }

@@ -11,7 +11,6 @@ class ErrorController
     {
         $statusCode = $exception instanceof NotFoundHttpException ? 404 : 500;
         $errorStatusCode = __DIR__ . '/../../public/' . $statusCode . '.html';
-
         if ($statusCode === 404) {
             return new Response(file_get_contents($errorStatusCode), Response::HTTP_NOT_FOUND, ['Content-Type' => 'text/html']);
         }

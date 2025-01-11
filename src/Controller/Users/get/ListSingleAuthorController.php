@@ -14,10 +14,17 @@ class ListSingleAuthorController extends AbstractController
 {
     public function __construct(private UsersRepository $usersRepository) {}
     
-    #[Route('/api/authors/get/{id}', name: 'list_single', methods: ['GET'])]
-    public function getAuthor(int $id): Response
+    #[Route('/api/authors/get/{authorIdentifier}', name: 'list_single', methods: ['GET'])]
+    public function getAuthor(mixed $authorIdentifier): Response
     {
-        $author = $this->usersRepository->find($id);
+        if (is_numeric($authorIdentifier) && (int)$authorIdentifier == $authorIdentifier) {
+            $author = $this->usersRepository->find((int)$authorIdentifier);
+        } elseif (is_string($authorIdentifier)) {
+            $authorIdentifier = str_replace('-', ' ', $authorIdentifier);
+            $author = $this->usersRepository->findOneByName($authorIdentifier);
+        } else {
+            $author = null;
+        }
 
         if (!$author) {
             return new JsonResponse(['error' => 'Author not found'], 404);

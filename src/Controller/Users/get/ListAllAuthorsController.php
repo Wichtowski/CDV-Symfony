@@ -20,13 +20,12 @@ class ListAllAuthorsController extends AbstractController
     #[Route('/api/authors/get/all', name: 'api_authors_list_all', methods: ['GET'])]
     public function listAuthors(): JsonResponse
     {
-        $authors = $this->usersRepository->findAll();
+        $authors = $this->usersRepository->findAllByRole('Author');
         $data = [];
     
         foreach ($authors as $author) {
             $data[] = [
                 'id' => $author->getId(),
-                'email' => $author->getEmail(),
                 'name' => $author->getName(),
             ];
         }

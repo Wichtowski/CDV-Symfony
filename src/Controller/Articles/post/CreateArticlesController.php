@@ -19,13 +19,20 @@ class CreateArticlesController extends AbstractController
         try {
             $data = json_decode($request->getContent(), true);
 
-            if (!isset($data['title'], $data['content'])) {
+            if (!isset($data['title'], $data['content'], $data['author'])) {
                 throw new \InvalidArgumentException('Invalid input data');
+            }
+
+            $author = $entityManager->getRepository(Author::class)->find($data['author']);
+            if (!$author) {
+                throw new \InvalidArgumentException('Author not found');
             }
 
             $article = new Articles();
             $article->setTitle($data['title']);
             $article->setContent($data['content']);
+            $article->setAuthor($data['author']);
+            $article->setCreatedAt(new \DateTime());
             $entityManager->persist($article);
             $entityManager->flush();
 

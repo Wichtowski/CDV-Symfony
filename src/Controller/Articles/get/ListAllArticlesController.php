@@ -18,7 +18,11 @@ class ListAllArticlesController extends AbstractController
     #[Route('/api/articles/get/all', name: 'api_articles_list_all', methods: ['GET'])]
     public function listAllArticles(): JsonResponse
     {
-        $articles = $this->articleService->getAllArticles();
-        return new JsonResponse($articles, 200);
+        try {
+            $articles = $this->articleService->getAllArticles();
+            return new JsonResponse($articles, 200);
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => $e->getMessage()], 500);
+        }
     }
 }

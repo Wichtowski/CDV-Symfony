@@ -3,7 +3,7 @@ function createButtonWithPermission(buttonLabel, redirectUrl) {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("user_token") || (document.cookie.split('; ').find(row => row.startsWith('user_token='))?.split('=')[1] || 'symfony-role-guest')}`
+            "Authorization": `Bearer ${localStorage.getItem("user_token") || (document.cookie.split('; ').find(row => row.startsWith('user_token='))?.split('=')[1] || null)}`
         },
     })
         .then(response => response.json())

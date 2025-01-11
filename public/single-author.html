@@ -12,11 +12,14 @@
     <div class="container">
         <h1 id="name"></h1>
         <span id="error"></span>
-        <div class="load-authors-articles"></div>
+        <div class="load-authors-articles">
+            <ul>
+            </ul>
+        </div>
         <div class="buttonsContainer">
-            <button class="content-button" onclick="window.location.href='/'">Go to Index</button>
-            <button class="content-button" onclick="window.location.href='/authors'">Go to Authors</button>
-            <button class="content-button" onclick="window.location.href='/articles'">Go to Articles</button>
+            <button class="content-button" onclick="window.location.href='/'">Index</button>
+            <button class="content-button" onclick="window.location.href='/authors'">Authors</button>
+            <button class="content-button" onclick="window.location.href='/articles'">Articles</button>
         </div>
     </div>
 </body>
@@ -46,7 +49,7 @@
                     articlesContainer.innerHTML = "<p>No articles found for this author.</p>";
                 } else {
                     data.forEach(article => {
-                        const articleElement = document.createElement("div");
+                        const articleElement = document.createElement("li");
                         articleElement.classList.add("card");
                         articleElement.innerHTML = `
                             <h4 class="content-heading">${article.title}</h4>

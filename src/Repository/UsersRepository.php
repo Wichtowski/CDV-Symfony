@@ -2,15 +2,19 @@
 
 namespace App\Repository;
 
-use App\Entity\User;
+use App\Entity\Users;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use App\Entity\UserRole;
 
 /**
- * @extends ServiceEntityRepository<User>
+ * @method Users|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Users|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Users[]    findAll()
+ * @method Users[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class UsersRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
@@ -20,7 +24,7 @@ class UsersRepository extends ServiceEntityRepository implements PasswordUpgrade
     }
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, User::class);
+        parent::__construct($registry, Users::class);
     }
 
     /**
@@ -28,7 +32,7 @@ class UsersRepository extends ServiceEntityRepository implements PasswordUpgrade
      */
     public function updatePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
-        if (!$user instanceof User) {
+        if (!$user instanceof Users) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
         }
 
@@ -37,7 +41,7 @@ class UsersRepository extends ServiceEntityRepository implements PasswordUpgrade
         $this->getEntityManager()->flush();
     }
 
-    public function findOneByEmail(string $email): ?User
+    public function findOneByEmail(string $email): ?Users
     {
         return $this->createQueryBuilder('u')
             ->andWhere('u.email = :email')
@@ -46,17 +50,46 @@ class UsersRepository extends ServiceEntityRepository implements PasswordUpgrade
             ->getOneOrNullResult();
     }
 
-    public function findAllByRole(JSON $role): array
+    public function findOneByName(string $name): ?Users
     {
         return $this->createQueryBuilder('u')
-            ->andWhere('u.roles = :role')
-            ->setParameter('role', $role)
+            ->andWhere('u.name = :name')
+            ->setParameter('name', $name)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findAllAuthorArticles(int $id): ?Users
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.id = :id')
+            ->setParameter('id', $id)
+            ->setParameter('role', UserRole::ROLES['Author'])
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findAllByRole(string $role): array
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.role = :role')
+            ->setParameter('role', UserRole::ROLES[$role])
+            ->getQuery()
+            ->getResult();
+    }
+
+    
+    public function findAdmins()
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.roles LIKE :role')
+            ->setParameter('role', '%' . UserRole::ROLES['Admin'] . '%')
             ->getQuery()
             ->getResult();
     }
 
     //    /**
-    //     * @return User[] Returns an array of User objects
+    //     * @return Users[] Returns an array of Users objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -70,7 +103,7 @@ class UsersRepository extends ServiceEntityRepository implements PasswordUpgrade
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?User
+    //    public function findOneBySomeField($value): ?Users
     //    {
     //        return $this->createQueryBuilder('u')
     //            ->andWhere('u.exampleField = :val')

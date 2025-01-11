@@ -14,14 +14,13 @@ class ListSingleArticleController extends AbstractController
     public function __construct(private ArticleService $articleService) {}
 
     #[Route('/api/articles/get/{id}', name: 'list_single_article', methods: ['GET'])]
-    public function listSingleArticle(string $id): JsonResponse
+    public function listSingleArticle(int $id): JsonResponse
     {
-        $articleId = (int) $id;
-        $article = $this->articleService->getSingleArticle($articleId);
-        if (!$article) {
-            return new JsonResponse(['error' => 'Article not found'], 404);
+        try {
+            $article = $this->articleService->getSingleArticle($id);
+            return new JsonResponse($article, 200);
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => $e->getMessage()], 500);
         }
-
-        return new JsonResponse($article, 200);
     }
 }

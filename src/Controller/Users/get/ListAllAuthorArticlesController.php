@@ -6,7 +6,7 @@ namespace App\Controller\Users\get;
 
 use App\Entity\Users;
 use App\Entity\Articles;
-use App\Repository\ArticlesRepository;
+use App\Service\Users\Authors\AuthorService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,24 +16,17 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class ListAllAuthorArticlesController extends AbstractController
 {
-    public function __construct(private ArticlesRepository $articlesRepository) {}
+    public function __construct(private AuthorService $authorService) {}
 
-    #[Route('/api/articles/get/author/{id}', name: 'api_articles_list_authors_all', methods: ['GET'])]
-    public function listAuthors(int $id): JsonResponse
+    #[Route('/api/authors/get/articles/{id}', name: 'api_list_all_authors_articles', methods: ['GET'])]
+    public function listAuthorsArticles(int $id): JsonResponse
     {
-        $authorsArticles = $this->articlesRepository->findAllArbiclesByAuthorId($id);
-        $data = [];
-    
-        foreach ($authorsArticles as $article) {
-            $data[] = [
-                'id' => $article->getId(),
-                'title' => $article->getTitle(),
-                'content' => $article->getContent(),
-                'author' => $article->getAuthor()->getName(),
-                'createdAt' => $article->getCreatedAt()
-            ];
+        try {
+            $authorsArticles = $this->authorService->getAuthorsArticles($id);
+        
+            return new JsonResponse($authorsArticles);
+        } catch (\Exception $e) {
+            return new JsonResponse(['error' => $e->getMessage()], 500);
         }
-    
-        return new JsonResponse($data);
     }
 }

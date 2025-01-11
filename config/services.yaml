@@ -8,39 +8,38 @@ parameters:
 services:
     # default configuration for services in *this* file
     _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
+        autowire: true # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
-        resource: '../src/'
+        resource: "../src/"
         exclude:
-            - '../src/DependencyInjection/'
-            - '../src/Entity/'
-            - '../src/Kernel.php'
+            - "../src/DependencyInjection/"
+            - "../src/Entity/"
+            - "../src/Kernel.php"
     # config/services.yaml
 
-#     App\Controller\ErrorController:
-#         public: true
-#         tags:
-#             - { name: controller.service_arguments }
+    # App\Controller\ErrorController:
+    #     public: true
+    #     tags:
+    #         - { name: controller.service_arguments }
 
+    # App\Service\PermissionService:
+    #     arguments: []
 # framework:
 #     error_controller: App\Controller\ErrorController::show
 
-    App\Service\PermissionService:
-        arguments: []
+# App\Service\MongoDBLogger:
+#     arguments:
+#         $server: '%mongodb.server%'
+#         $options: '%mongodb.options%'
+#         $database: '%mongodb.database%'
 
-    # App\Service\MongoDBLogger:
-    #     arguments:
-    #         $server: '%mongodb.server%'
-    #         $options: '%mongodb.options%'
-    #         $database: '%mongodb.database%'
+# App\EventListener\ApiRequestListener:
+#     tags:
+#         - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
-    # App\EventListener\ApiRequestListener:
-    #     tags:
-    #         - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+# add more service definitions when explicit configuration is needed
+# please note that last definitions always *replace* previous ones
