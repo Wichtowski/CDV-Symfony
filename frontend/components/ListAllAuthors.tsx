@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { getAllAuthors } from '@/api/Authors/get/allAuthors';
+import { getAllAuthors } from '@/api/Users/Authors/get/allAuthors';
 import NavLink from '@/components/utils/NavLink';
 import AuthorCard from '@/components/utils/AuthorCard';
 import { Author } from '@/interfaces/Users';
