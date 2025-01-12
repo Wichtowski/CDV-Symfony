@@ -15,7 +15,7 @@ class ListAllArticlesController extends AbstractController
     public function __construct(private ArticleService $articleService) {}
 
 
-    #[Route('/api/articles/get/all', name: 'api_articles_list_all', methods: ['GET'])]
+    #[Route('/api/articles/all', name: 'api_articles_list_all', methods: ['GET'])]
     public function listAllArticles(): JsonResponse
     {
         try {

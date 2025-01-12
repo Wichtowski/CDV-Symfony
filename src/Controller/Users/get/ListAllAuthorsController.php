@@ -17,10 +17,10 @@ class ListAllAuthorsController extends AbstractController
 {
     public function __construct(private UsersRepository $usersRepository) {}
 
-    #[Route('/api/authors/get/all', name: 'api_authors_list_all', methods: ['GET'])]
+    #[Route('/api/authors/all', name: 'api_authors_list_all', methods: ['GET'])]
     public function listAuthors(): JsonResponse
     {
-        $authors = $this->usersRepository->findAllByRole('Author');
+        $authors = $this->usersRepository->findOneBy(['roles' => ['AUTHOR']]);
         $data = [];
     
         foreach ($authors as $author) {

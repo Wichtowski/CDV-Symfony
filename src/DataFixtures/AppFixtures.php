@@ -21,13 +21,13 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $usersData = [
-            ['name' => 'Alice Johnson', 'email' => 'alice.johnson@example.com', 'role' => UserRole::ROLES['Guest']],
-            ['name' => 'Bob Smith', 'email' => 'bob.smith@example.com', 'role' => UserRole::ROLES['Subscriber']],
-            ['name' => 'Charlie Brown', 'email' => 'charlie.brown@example.com', 'role' => UserRole::ROLES['Author']],
-            ['name' => 'Fiona Gallagher', 'email' => 'fiona.gallagher@example.com', 'role' => UserRole::ROLES['Author']],
-            ['name' => 'George Martin', 'email' => 'george.martin@example.com', 'role' => UserRole::ROLES['Author']],
-            ['name' => 'Diana Prince', 'email' => 'diana.prince@example.com', 'role' => UserRole::ROLES['Moderator']],
-            ['name' => 'Edward Norton', 'email' => 'edward.norton@example.com', 'role' => UserRole::ROLES['Admin']],
+            ['name' => 'Alice Johnson', 'email' => 'alice.johnson@example.com', 'roles' => UserRole::ROLES['Guest']],
+            ['name' => 'Bob Smith', 'email' => 'bob.smith@example.com', 'roles' => UserRole::ROLES['Subscriber']],
+            ['name' => 'Charlie Brown', 'email' => 'charlie.brown@example.com', 'roles' => UserRole::ROLES['Author']],
+            ['name' => 'Fiona Gallagher', 'email' => 'fiona.gallagher@example.com', 'roles' => UserRole::ROLES['Author']],
+            ['name' => 'George Martin', 'email' => 'george.martin@example.com', 'roles' => UserRole::ROLES['Author']],
+            ['name' => 'Diana Prince', 'email' => 'diana.prince@example.com', 'roles' => UserRole::ROLES['Moderator']],
+            ['name' => 'Edward Norton', 'email' => 'edward.norton@example.com', 'roles' => UserRole::ROLES['Admin']],
         ];
 
         $users = [];
@@ -36,7 +36,7 @@ class AppFixtures extends Fixture
             $hashedPassword = $this->passwordHasher->hashPassword($user, 'zaq1@WSX');
             $user->setName($userData['name']);
             $user->setEmail($userData['email']);
-            // $user->setRoles([]);
+            $user->setRoles([$userData['roles']]);
             $user->setPassword($hashedPassword);
             $manager->persist($user);
             $users[] = $user;

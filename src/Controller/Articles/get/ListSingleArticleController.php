@@ -13,7 +13,7 @@ class ListSingleArticleController extends AbstractController
 {
     public function __construct(private ArticleService $articleService) {}
 
-    #[Route('/api/articles/get/{id}', name: 'list_single_article', methods: ['GET'])]
+    #[Route('/api/articles/{id}', name: 'list_single_article', methods: ['GET'])]
     public function listSingleArticle(int $id): JsonResponse
     {
         try {

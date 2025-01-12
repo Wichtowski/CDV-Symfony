@@ -19,7 +19,7 @@ class UserPermissionController extends AbstractController
         private TokenService $tokenService
     ) {}
 
-    #[Route('/api/users/post/permission', name: 'users_permission', methods: ['POST'])]
+    #[Route('/api/users/permission', name: 'users_permission', methods: ['POST'])]
     public function checkPermission(Request $request): JsonResponse
     {
         $token = $request->headers->get('Authorization');

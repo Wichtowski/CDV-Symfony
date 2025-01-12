@@ -14,7 +14,7 @@ class ListSingleAuthorController extends AbstractController
 {
     public function __construct(private UsersRepository $usersRepository) {}
     
-    #[Route('/api/authors/get/{authorIdentifier}', name: 'list_single', methods: ['GET'])]
+    #[Route('/api/authors/{authorIdentifier}', name: 'list_single', methods: ['GET'])]
     public function getAuthor(mixed $authorIdentifier): Response
     {
         if (is_numeric($authorIdentifier) && (int)$authorIdentifier == $authorIdentifier) {

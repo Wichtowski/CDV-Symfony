@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class CreateArticlesController extends AbstractController
 {
-    #[Route('/api/articles/post/create', name: 'api_create_article', methods: ['POST'])]
+    #[Route('/api/articles/create', name: 'api_create_article', methods: ['POST'])]
     public function __invoke(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         try {

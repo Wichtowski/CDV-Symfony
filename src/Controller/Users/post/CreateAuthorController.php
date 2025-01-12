@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class CreateAuthorController extends AbstractController
 {
-    #[Route('/api/authors/post/create', name: 'create_author', methods: ['POST'])]
+    #[Route('/api/authors/create', name: 'create_author', methods: ['POST'])]
     public function createAuthor(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         try {

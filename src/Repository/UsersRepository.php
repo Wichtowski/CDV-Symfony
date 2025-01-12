@@ -64,26 +64,16 @@ class UsersRepository extends ServiceEntityRepository implements PasswordUpgrade
         return $this->createQueryBuilder('u')
             ->andWhere('u.id = :id')
             ->setParameter('id', $id)
-            ->setParameter('role', UserRole::ROLES['Author'])
+            ->setParameter('roles', UserRole::ROLES['Author'])
             ->getQuery()
             ->getOneOrNullResult();
     }
-
-    public function findAllByRole(string $role): array
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.role = :role')
-            ->setParameter('role', UserRole::ROLES[$role])
-            ->getQuery()
-            ->getResult();
-    }
-
     
     public function findAdmins()
     {
         return $this->createQueryBuilder('u')
-            ->andWhere('u.roles LIKE :role')
-            ->setParameter('role', '%' . UserRole::ROLES['Admin'] . '%')
+            ->andWhere('u.roles LIKE :roles')
+            ->setParameter('roles', '%' . UserRole::ROLES['Admin'] . '%')
             ->getQuery()
             ->getResult();
     }

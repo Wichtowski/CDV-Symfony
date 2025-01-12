@@ -18,7 +18,7 @@ class ListAllAuthorArticlesController extends AbstractController
 {
     public function __construct(private AuthorService $authorService) {}
 
-    #[Route('/api/authors/get/articles/{id}', name: 'api_list_all_authors_articles', methods: ['GET'])]
+    #[Route('/api/authors/articles/{id}', name: 'api_list_all_authors_articles', methods: ['GET'])]
     public function listAuthorsArticles(int $id): JsonResponse
     {
         try {
