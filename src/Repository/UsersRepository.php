@@ -3,8 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\Users;
+use App\Entity\Articles;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface; 
+use Doctrine\DBAL\Driver\Statement as DriverStatement;
+use Symfony\Bridge\Doctrine\Middleware\Debug\DBAL3\Statement;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
@@ -22,7 +26,7 @@ class UsersRepository extends ServiceEntityRepository implements PasswordUpgrade
     {
         $this->updatePassword($user, $newHashedPassword);
     }
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private EntityManagerInterface $entityManager)
     {
         parent::__construct($registry, Users::class);
     }
@@ -44,8 +48,8 @@ class UsersRepository extends ServiceEntityRepository implements PasswordUpgrade
     public function findOneByEmail(string $email): ?Users
     {
         return $this->createQueryBuilder('u')
-            ->andWhere('u.email = :email')
-            ->setParameter('email', $email)
+            ->andWhere('u.email = :e')
+            ->setParameter('e', $email)
             ->getQuery()
             ->getOneOrNullResult();
     }
@@ -53,21 +57,27 @@ class UsersRepository extends ServiceEntityRepository implements PasswordUpgrade
     public function findOneByName(string $name): ?Users
     {
         return $this->createQueryBuilder('u')
-            ->andWhere('u.name = :name')
-            ->setParameter('name', $name)
+            ->andWhere('u.name = :n')
+            ->setParameter('n', $name)
             ->getQuery()
             ->getOneOrNullResult();
     }
 
-    public function findAllAuthorArticles(int $id): ?Users
+    public function findAllAuthors(): array
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.id = :id')
-            ->setParameter('id', $id)
-            ->setParameter('roles', UserRole::ROLES['Author'])
-            ->getQuery()
-            ->getOneOrNullResult();
+        $sql = 'SELECT * FROM "users" WHERE CAST("roles" AS text) ~ :role';
+        $result = $this->entityManager->getConnection()->executeQuery($sql, ['role' => 'ROLE_AUTHOR']);
+        return $this->entityManager->getRepository(Users::class)->findBy(['id' => array_column($result->fetchAllAssociative(), 'id')]);
     }
+
+    public function findAllAuthorArticles(int $id)
+    {
+        $sql = 'SELECT * FROM "users" WHERE CAST("roles" AS text) ~ :role AND "id" = :id';
+        $result = $this->entityManager->getConnection()->executeQuery($sql, ['role' => 'ROLE_AUTHOR', 'id' => $id]);
+        // dd($result->fetchAllAssociative());
+        return $this->entityManager->getRepository(Articles::class)->findBy(['id' => array_column($result->fetchAllAssociative(), $id)]);
+    }
+
     
     public function findAdmins()
     {

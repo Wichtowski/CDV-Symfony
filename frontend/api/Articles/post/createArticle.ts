@@ -1,6 +1,5 @@
 import axiosInstance from '@/api/axiosInstance';
 import { Article } from '@/interfaces/Article';
-import { Author } from '@/interfaces/Users';
 
 export const createNewArticle = async (article: Article) => {
     try {
@@ -9,12 +8,12 @@ export const createNewArticle = async (article: Article) => {
         }
 
         article.author = article.author.toLocaleLowerCase().replace(/\s+/g, '-');
-        const isAuthorValid = await axiosInstance.get(`/authors/get/${article.author}`);
+        const isAuthorValid = await axiosInstance.get(`/api/authors/${article.author}`);
         if (isAuthorValid.data.error || isAuthorValid.data.authorName !== article.author) {
             throw new Error('Author does not exist');
         }
 
-        const response = await axiosInstance.post(`/articles/post/create`, article);
+        const response = await axiosInstance.post(`/api/articles/create`, article);
         
         return response.data;
     } catch (error) {

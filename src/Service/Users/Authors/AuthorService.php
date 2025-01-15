@@ -10,54 +10,65 @@ use App\Repository\UsersRepository;
 class AuthorService extends BaseService
 {
 
-    public function __construct(private UsersRepository $authorsRepository) {}
+    public function __construct(private UsersRepository $usersRepository) {}
 
     public function getAllAuthors(): array
     {
-        $authors = $this->authorsRepository->findAll();
-        return array_map(static function ($author) {
-            return [
+        $authors = $this->usersRepository->findAllAuthors();
+
+        if (!$authors) {
+            throw $this->failResponder('Author not found', 404);
+        }
+
+        $data = [];
+        foreach ($authors as $author) {
+            $data[] = [
                 'id' => $author->getId(),
                 'name' => $author->getName(),
-                'bio' => $author->getBio(),
             ];
-        }, $authors);
-    }
-
-    public function getAuthorsArticles(int $id): array
-    {
-        try {
-            $author = $this->authorsRepository->findAllAuthorArticles($id);
-            if (!$author) {
-                throw new \Exception('Authors articles not found');
-            }
-
-            $articles = $author->getArticles();
-            return array_map(static function ($article) {
-                return [
-                    'id' => $article->getId(),
-                    'title' => $article->getTitle(),
-                    'content' => $article->getContent(),
-                    'author' => $article->getAuthor()->getName(),
-                    'createdAt' => $article->getCreatedAt()
-                ];
-            }, $articles);
-        } catch (\Exception $e) {
-            throw new \Exception('Error getting authors articles');
         }
+        return $data;
     }
 
-    public function getAuthorById(int $id): ?array
+    public function getAuthor(int|string $authorID)
     {
-        $author = $this->authorsRepository->find($id);
+        $author = null; // Initialize the variable
+        if (is_numeric($authorID) && (int)$authorID == $authorID) {
+            $author = $this->usersRepository->find($authorID);
+        } elseif (is_string($authorID)) {
+            $authorID = str_replace('-', ' ', $authorID);
+            $author = $this->usersRepository->findOneByName($authorID);
+        } else {
+            $author = null;
+        }
         if (!$author) {
-            return null;
+            throw $this->failResponder('Author not found', 404);
         }
 
-        return [
-            'id' => $author->getId(),
-            'name' => $author->getName(),
-            'bio' => $author->getBio(),
-        ];
+        return $author;
     }
+
+    public function getAuthorsArticles(int|string $id): array
+    {
+        $author = $this->getAuthor($id);
+        
+        $authorArticles = $this->usersRepository->findAllAuthorArticles($author->getId());
+
+        if (!$authorArticles) {
+            return $this->failResponder('Author does not have articles', 404);
+        }
+
+        $formattedArticles = array_map(static function ($article) {
+            return [
+            'id' => $article->getId(),
+            'title' => $article->getTitle(),
+            'content' => $article->getContent(),
+            'author' => $article->getAuthor()->getName(),
+            'createdAt' => $article->getCreatedAt()
+            ];
+        }, $authorArticles);
+
+        return $formattedArticles;
+    }
+
 }

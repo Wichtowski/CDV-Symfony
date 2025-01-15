@@ -3,12 +3,10 @@
 declare(strict_types=1);
 
 namespace App\Service;
-use Symfony\Component\HttpFoundation\JsonResponse;
-
 
 class BaseService
 {
-    public function failResponder(string $message, int $statusCode): JsonResponse
+    public function failResponder(string $message, int $statusCode): void
     {
         switch ($statusCode) {
             case 400:
@@ -30,11 +28,11 @@ class BaseService
                 $errorMessage = $message;
                 break;
         }
-        return new JsonResponse(['error' => $errorMessage], $statusCode);
+        throw new \Exception($errorMessage, $statusCode);
     }
 
-    public function successResponder($data): JsonResponse
+    public function successResponder($data): array
     {
-        return new JsonResponse($data, 200);
+        return ['data' => $data, 'status' => 200];
     }
 }

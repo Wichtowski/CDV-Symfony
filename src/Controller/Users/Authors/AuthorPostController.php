@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Users\post;
+namespace App\Controller\Users\Authors;
 
 use App\Entity\Users;
 use Doctrine\ORM\EntityManagerInterface;
@@ -10,10 +10,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-class CreateAuthorController extends AbstractController
+#[Route('/api')]
+class AuthorPostController extends AbstractController
 {
-    #[Route('/api/authors/create', name: 'create_author', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN', statusCode: 403, exceptionCode: 10000 )]
+    #[Route('/authors/create', name: 'create_author', methods: ['POST'])]
     public function createAuthor(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         try {

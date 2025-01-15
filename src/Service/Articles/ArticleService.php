@@ -42,14 +42,11 @@ class ArticleService extends BaseService
             $article = $this->articlesRepository->find($id);
 
             if (!$article) {
-                throw new \Exception('Article not found');
+                $this->failResponder('Article not found', 404);
             }
+            return $this->successResponder(self::formatArticle($article));
         } catch (\Exception $e) {
-            if ($e->getMessage() == 'Article not found') {
-                return ['error' => $e->getMessage(), 'status' => 404];
-            } 
-            return ['error' => $e->getMessage(), 'status' => 500];
+            throw $e;
         }
-        return self::formatArticle($article);
     }
 }

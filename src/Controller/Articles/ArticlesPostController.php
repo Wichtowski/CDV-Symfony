@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Articles\post;
+namespace App\Controller\Articles;
 
 use App\Entity\Articles;
 use Doctrine\ORM\EntityManagerInterface;
@@ -11,8 +11,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class CreateArticlesController extends AbstractController
+class ArticlesPostController extends AbstractController
 {
+    #[IsGranted('ROLE_AUTHOR', statusCode: 403, exceptionCode: 50000 )]
     #[Route('/api/articles/create', name: 'api_create_article', methods: ['POST'])]
     public function __invoke(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {

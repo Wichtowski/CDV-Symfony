@@ -28,6 +28,7 @@ class AppFixtures extends Fixture
             ['name' => 'George Martin', 'email' => 'george.martin@example.com', 'roles' => UserRole::ROLES['Author']],
             ['name' => 'Diana Prince', 'email' => 'diana.prince@example.com', 'roles' => UserRole::ROLES['Moderator']],
             ['name' => 'Edward Norton', 'email' => 'edward.norton@example.com', 'roles' => UserRole::ROLES['Admin']],
+            ['name' => 'Cole Palmer', 'email' => 'cole.palmer@example.com', 'roles' => UserRole::ROLES['Author']],
         ];
 
         $users = [];
