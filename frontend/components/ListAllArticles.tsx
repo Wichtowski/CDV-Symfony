@@ -1,31 +1,21 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { getAllArticles } from '@/api/Articles/get/allArticles';
+import { useArticlesStore } from '@/store/ArticleStore';
 import NavLink from '@/components/utils/NavLink';
 import ArticleCard from '@/components/utils/ArticleCard';
 import { Article } from '@/interfaces/Article';
 
 const ListAllArticles: React.FC = () => {
-    const [articles, setAllArticles] = useState<Article[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
+    const articlesStatus = useArticlesStore((state) => state.articlesStatus);
+    const loadArticles = useArticlesStore((state) => state.loadArticles);
+    const articles = useArticlesStore((state) => state.articles);
 
     useEffect(() => {
-        const fetchArticles = async () => {
-            try {
-                const data = await getAllArticles();
-                setAllArticles(data);
-            } catch (error) {
-                console.error('Error fetching Articles:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchArticles();
+        Promise.all([loadArticles()]);
     }, []);
 
-    if (loading) {
+    if (articlesStatus != 'Ready') {
         return (
             <div className="">
                 <div className='flex flex-wrap flex-col gap-6 m-4 max-w-96 mx-auto'>
@@ -43,9 +33,10 @@ const ListAllArticles: React.FC = () => {
             </div >
         )
     }
+
     return (
         <div className='flex flex-wrap flex-col gap-6 m-4 max-w-96 mx-auto'>
-            {Array.isArray(articles) ? articles.map((article) => (
+            {Array.isArray(articles) && articles.length > 0 ? articles.map((article: Article) => (
                 <ArticleCard
                     key={article.id}
                     article={article}
