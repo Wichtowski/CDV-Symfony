@@ -50,13 +50,15 @@ export const useArticlesStore = create<ArticlesStore>((set, get) => {
         articlesStatus: 'NotReady',
         authorsStatus: 'NotReady',
         loadArticles: async () => {
-            await loadData(get().articlesStatus, 'articlesStatus', async () => {
+            const { articlesStatus, articles } = get();
+            await loadData(articlesStatus, 'articlesStatus', async () => {
                 const articles = await getAllArticles();
                 return { articles };
             });
         },
         loadAuthors: async () => {
-            await loadData(get().authorsStatus, 'authorsStatus', async () => {
+            const { authorsStatus, authors } = get();
+            await loadData(authorsStatus, 'authorsStatus', async () => {
                 const authors = await getAllAuthors();
                 return { authors };
             });

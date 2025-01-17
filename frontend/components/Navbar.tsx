@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import BurgerMenu from './utils/Icons/BurgerMenu';
+import NavLink from './utils/NavLink';
 
 interface NavbarProps {
     mobileElements?: { name: string; link: string }[];
@@ -22,7 +23,9 @@ const Navbar = ({ mobileElements: customMobileElements, desktopElements: customD
             document.body.style.overflow = 'auto';
         }
     }, [isOpen]);
-
+    const handleMobileLinkClick = () => {
+        setIsOpen(false);
+    };
     const defaultMobileElements = [
         { name: 'Home', link: '/' },
         { name: 'Articles', link: '/articles' },
@@ -49,11 +52,11 @@ const Navbar = ({ mobileElements: customMobileElements, desktopElements: customD
                 <div className="block lg:hidden cursor-pointer" onClick={toggleMenu}>
                     <BurgerMenu />
                 </div>
-                <div className={`lg:flex items-center list-none transition-all duration-500 ease-in-out overflow-hidden fixed top-20 left-0 w-full bg-gray-900 z-50 ${isOpen ? 'h-[calc(100vh-5rem)]' : 'h-0'}`}>
+                <div className={`lg:flex items-center list-none transition-all duration-500 ease-in-out overflow-hidden fixed top-20 left-0 w-full bg-gray-900 z-50 ${isOpen ? 'h-[calc(100vh-5rem)]' : 'h-0'}`} onClick={handleMobileLinkClick}>
                     <ul className="flex flex-col w-full items-center lg:hidden">
                         {mobileElements.map((li, index) => (
                             <li key={index} className="lg:inline-block">
-                                <a href={li.link} className="block px-4 py-3 text-white text-xl hover:bg-gray-700 transition duration-125 rounded">{li.name}</a>
+                                <NavLink href={li.link} label={li.name} styles='block px-4 py-3 text-white text-xl hover:bg-gray-700 transition duration-125 rounded' />
                             </li>
                         ))}
                     </ul>
@@ -61,7 +64,7 @@ const Navbar = ({ mobileElements: customMobileElements, desktopElements: customD
                 <ul className="hidden lg:flex items-center list-none">
                     {desktopElements.map((li, index) => (
                         <li key={index} className="lg:inline-block">
-                            <a href={li.link} className="block px-4 py-3 text-white text-xl hover:bg-gray-700 transition duration-125 rounded">{li.name}</a>
+                            <NavLink href={li.link} label={li.name} styles='block px-4 py-3 text-white text-xl hover:bg-gray-700 transition duration-125 rounded' />
                         </li>
                     ))}
                 </ul>

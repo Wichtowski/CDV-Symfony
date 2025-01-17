@@ -1,31 +1,21 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { getAllAuthors } from '@/api/Users/Authors/get/getAllAuthors';
+import { useArticlesStore } from '@/store/ArticleStore';
 import NavLink from '@/components/utils/NavLink';
 import AuthorCard from '@/components/utils/AuthorCard';
 import { Author } from '@/interfaces/Users';
 
 const ListAllAuthors: React.FC = () => {
-    const [authors, setAllAuthors] = useState<Author[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
+    const authorsStatus = useArticlesStore((state) => state.articlesStatus);
+    const loadAuthors = useArticlesStore((state) => state.loadAuthors);
+    const authors = useArticlesStore((state) => state.authors);
 
     useEffect(() => {
-        const fetchAuthors = async () => {
-            try {
-                const data = await getAllAuthors();
-                setAllAuthors(data);
-            } catch (error) {
-                console.error('Error fetching Authors:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchAuthors();
+        Promise.all([loadAuthors()]);
     }, []);
 
-    if (loading) {
+    if (authorsStatus != 'Ready') {
         return (
             <div className="">
                 <div className='flex flex-wrap flex-col gap-6 m-4 max-w-96 mx-auto'>
@@ -37,12 +27,12 @@ const ListAllAuthors: React.FC = () => {
                     ))}
                 </div>
                 <NavLink href="/" />
-            </div >
+            </div>
         )
     }
     return (
         <div className='flex flex-wrap flex-col gap-6 m-4 max-w-96 mx-auto'>
-            {Array.isArray(authors) ? authors.map((author) => (
+            {Array.isArray(authors) && authors.length > 0 ? authors.map((author) => (
                 <AuthorCard
                     key={author.id}
                     author={author}
