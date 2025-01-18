@@ -6,6 +6,7 @@ namespace App\Service\Users\Authors;
 
 use App\Service\BaseService;
 use App\Repository\UsersRepository;
+use App\Exceptions\AuthorNotFoundException;
 
 class AuthorService extends BaseService
 {
@@ -17,7 +18,7 @@ class AuthorService extends BaseService
         $authors = $this->usersRepository->findAllAuthors();
 
         if (!$authors) {
-            throw $this->failResponder('Authors not found', 404);
+            throw new AuthorNotFoundException();
         }
 
         $data = [];
@@ -27,7 +28,7 @@ class AuthorService extends BaseService
                 'name' => $author->getName(),
             ];
         }
-        return $data;
+        return $this->successResponder($data);
     }
 
     public function getAuthor(int|string $authorID)

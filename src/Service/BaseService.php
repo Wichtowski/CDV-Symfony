@@ -33,6 +33,6 @@ class BaseService
 
     public function successResponder($data): array
     {
-        return ['data' => $data, 'status' => 200];
+        return ['data' => $data, 'errors' => $error, 'status' => 200];
     }
 }
