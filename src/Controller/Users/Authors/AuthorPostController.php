@@ -16,7 +16,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class AuthorPostController extends AbstractController
 {
     #[IsGranted('ROLE_ADMIN', statusCode: 403, exceptionCode: 10000 )]
-    #[Route('/authors/create', name: 'create_author', methods: ['POST'])]
+    #[Route('/users/authors/create', name: 'create_author', methods: ['POST'])]
     public function createAuthor(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         try {

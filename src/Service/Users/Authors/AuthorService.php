@@ -17,7 +17,7 @@ class AuthorService extends BaseService
         $authors = $this->usersRepository->findAllAuthors();
 
         if (!$authors) {
-            throw $this->failResponder('Author not found', 404);
+            throw $this->failResponder('Authors not found', 404);
         }
 
         $data = [];
