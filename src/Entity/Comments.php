@@ -17,11 +17,13 @@ class Comments
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Users")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $UserId;
+    #[ORM\ManyToOne(targetEntity: "App\Entity\Users")]
+    #[ORM\JoinColumn(nullable: false)]
+    private $user;
+
+    #[ORM\ManyToOne(targetEntity: "App\Entity\Articles")]
+    #[ORM\JoinColumn(nullable: false)]
+    private $article;
 
     public function getId(): ?int
     {
@@ -47,14 +49,26 @@ class Comments
         return $this;
     }
 
-    public function getUserId(): ?Users
+    public function getUser(): ?Users
     {
-        return $this->UserId;
+        return $this->user;
     }
 
-    public function setUserId(?Users $UserId): self
+    public function setUser(?Users $user): self
     {
-        $this->UserId = $UserId;
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getArticle(): ?Articles
+    {
+        return $this->article;
+    }
+
+    public function setArticle(?Articles $article): self
+    {
+        $this->article = $article;
 
         return $this;
     }
