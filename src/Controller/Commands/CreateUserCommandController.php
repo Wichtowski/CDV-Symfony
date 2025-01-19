@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Commands;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -14,8 +14,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Question\Question;
 
-#[AsCommand(name: 'create:user', description: 'My command description')]
-class CommandController extends Command
+#[AsCommand(name: 'user:create', description: 'Create a new user')]
+class CreateUserCommandController extends Command
 {
     public function __construct(private EntityManagerInterface $entityManager)
     {

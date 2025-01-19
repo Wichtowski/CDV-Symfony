@@ -7,8 +7,8 @@ use App\Entity\Articles;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface; 
-// use Doctrine\DBAL\Driver\Statement as DriverStatement;
-// use Symfony\Bridge\Doctrine\Middleware\Debug\DBAL3\Statement;
+use Doctrine\DBAL\Driver\Statement as DriverStatement;
+use Symfony\Bridge\Doctrine\Middleware\Debug\DBAL3\Statement;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
@@ -74,7 +74,6 @@ class UsersRepository extends ServiceEntityRepository implements PasswordUpgrade
     {
         $sql = 'SELECT * FROM "users" WHERE CAST("roles" AS text) ~ :role AND "id" = :id';
         $result = $this->entityManager->getConnection()->executeQuery($sql, ['role' => 'ROLE_AUTHOR', 'id' => $id]);
-        // dd($result->fetchAllAssociative());
         return $this->entityManager->getRepository(Articles::class)->findBy(['id' => array_column($result->fetchAllAssociative(), $id)]);
     }
 

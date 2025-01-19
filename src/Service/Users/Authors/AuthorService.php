@@ -4,36 +4,101 @@ declare(strict_types=1);
 
 namespace App\Service\Users\Authors;
 
-use App\Service\BaseService;
 use App\Repository\UsersRepository;
 use App\Exceptions\AuthorNotFoundException;
+use App\Exceptions\AuthorArticlesNotFoundException;
+use App\Formatter\ApiResponseFormatter;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Entity\Users;
+use App\Service\Articles;
 
-class AuthorService extends BaseService
+class AuthorService
 {
 
-    public function __construct(private UsersRepository $usersRepository) {}
+    public function __construct(
+        private UsersRepository $usersRepository,
+        private ApiResponseFormatter $apiResponseFormatter
+    ) {}
 
-    public function getAllAuthors(): array
+    public function getAllAuthors(): JsonResponse
     {
-        $authors = $this->usersRepository->findAllAuthors();
+        try {
+            $authors = $this->usersRepository->findAllAuthors();
+            
+            if (!$authors) {
+                throw new AuthorNotFoundException();
+            }
+    
+            $data = [];
+            foreach ($authors as $author) {
+                $data[] = $this->formatAuthor($author);
+            }
+            
+            return $this->apiResponseFormatter->withData($data)->response();
 
-        if (!$authors) {
-            throw new AuthorNotFoundException();
+        } catch (\Exception $e) {
+            return $this->apiResponseFormatter
+                ->withErrors([$e->getMessage()])
+                ->withStatus($e->getCode() ?: 500)
+                ->withMessage('Failed to retrieve authors')
+                ->response();
         }
-
-        $data = [];
-        foreach ($authors as $author) {
-            $data[] = [
-                'id' => $author->getId(),
-                'name' => $author->getName(),
-            ];
-        }
-        return $this->successResponder($data);
     }
 
-    public function getAuthor(int|string $authorID)
+    public function getSingleAuthor(int|string $authorID)
     {
-        $author = null; // Initialize the variable
+        try{
+            $author = $this->findAuthorByIdOrName($authorID);
+
+            return $this->apiResponseFormatter
+                ->withData($this->formatAuthor($author))
+                ->response();
+
+        } catch (\Exception $e) {
+            return $this->apiResponseFormatter
+                ->withErrors([$e->getMessage()])
+                ->withStatus($e->getCode() ?: 500)
+                ->withMessage('Failed to retrieve author')
+                ->response();
+        }
+    }
+
+    public function getAuthorsArticles(int|string $id): JsonResponse
+    {
+        try {
+            $author = $this->findAuthorByIdOrName($id)->getId();
+            $authorArticles = $this->usersRepository->findAllAuthorArticles($author);
+
+            if (!$authorArticles) {
+                throw new AuthorArticlesNotFoundException();
+            }
+
+            $formattedArticles = array_map([$this, 'formatArticle'], $authorArticles);
+
+            return $this->apiResponseFormatter
+                ->withData($formattedArticles)
+                ->response();
+
+        } catch (\Exception $e) {
+            return $this->apiResponseFormatter
+                ->withErrors([$e->getMessage()])
+                ->withStatus($e->getCode() ?: 500)
+                ->withMessage('Failed to retrieve author articles')
+                ->response();
+        }
+    }
+
+    private function formatAuthor($author): array
+    {
+        return [
+            'id' => $author->getId(),
+            'name' => $author->getName(),
+        ];
+    }
+
+    private function findAuthorByIdOrName($authorID): Users
+    {
+        $author = null;
         if (is_numeric($authorID) && (int)$authorID == $authorID) {
             $author = $this->usersRepository->find($authorID);
         } elseif (is_string($authorID)) {
@@ -42,34 +107,11 @@ class AuthorService extends BaseService
         } else {
             $author = null;
         }
+        
         if (!$author) {
-            throw $this->failResponder('Author not found', 404);
+            throw new AuthorNotFoundException();
         }
 
         return $author;
     }
-
-    public function getAuthorsArticles(int|string $id): array
-    {
-        $author = $this->getAuthor($id);
-        
-        $authorArticles = $this->usersRepository->findAllAuthorArticles($author->getId());
-
-        if (!$authorArticles) {
-            return $this->failResponder('Author does not have articles', 404);
-        }
-
-        $formattedArticles = array_map(static function ($article) {
-            return [
-            'id' => $article->getId(),
-            'title' => $article->getTitle(),
-            'content' => $article->getContent(),
-            'author' => $article->getAuthor()->getName(),
-            'createdAt' => $article->getCreatedAt()
-            ];
-        }, $authorArticles);
-
-        return $formattedArticles;
-    }
-
 }

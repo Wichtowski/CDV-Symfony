@@ -4,20 +4,19 @@ declare(strict_types=1);
 
 namespace App\Service\Articles;
 
-use App\Service\BaseService;
 use App\Repository\ArticlesRepository;
+use App\Formatter\ApiResponseFormatter;
+use App\Exceptions\ArticleNotFoundException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class ArticleService extends BaseService
+class ArticleService
 {
-    private ArticlesRepository $articlesRepository;
+    public function __construct(
+        private ArticlesRepository $articlesRepository,
+        private ApiResponseFormatter $apiResponseFormatter
+    ) {}
 
-    public function __construct(ArticlesRepository $articlesRepository)
-    {
-        $this->articlesRepository = $articlesRepository;
-    }
-
-    private static function formatArticle($article): array
+    public static function formatArticle($article): array
     {
         return [
             'id' => $article->getId(),
@@ -28,25 +27,51 @@ class ArticleService extends BaseService
         ];
     }
 
-    public function getAllArticles(): array
+    public function getAllArticles(): JsonResponse
     {
-        $articles = $this->articlesRepository->findAll();
-        return array_map(static function ($article) {
-            return self::formatArticle($article);
-        }, $articles);
+        try {
+
+            $articles = $this->articlesRepository->findAll();
+            
+            if (!$articles) {
+                throw new ArticleNotFoundException();
+            }
+
+            $data = [];
+            foreach ($articles as $article) {
+                $data[] = $this->formatArticle($article);
+            }
+            
+            return $this->apiResponseFormatter
+            ->withData($data)
+            ->response();
+        } catch (\Exception $e) {
+            return $this->apiResponseFormatter
+                ->withErrors([$e->getMessage()])
+                ->withStatus($e->getCode() ?: 500)
+                ->withMessage('Failed to retrieve articles')
+                ->response();
+        }
     }
 
-    public function getSingleArticle(int $id): array
+    public function getSingleArticle(int $id): JsonResponse
     {
         try {
             $article = $this->articlesRepository->find($id);
-
+            
             if (!$article) {
-                $this->failResponder('Article not found', 404);
+                throw new ArticleNotFoundException();
             }
-            return $this->successResponder(self::formatArticle($article));
+            
+            return $this->apiResponseFormatter  
+            ->withData($this->formatArticle($article))
+            ->response();
         } catch (\Exception $e) {
-            throw $e;
+            return $this->apiResponseFormatter
+                ->withErrors([$e->getMessage()])
+                ->withStatus($e->getCode() ?: 500)
+                ->withMessage('Failed to retrieve article')
+                ->response();
         }
     }
 }
