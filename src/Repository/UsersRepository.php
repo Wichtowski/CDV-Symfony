@@ -82,7 +82,7 @@ class UsersRepository extends ServiceEntityRepository implements PasswordUpgrade
     {
         return $this->createQueryBuilder('u')
             ->andWhere('u.roles LIKE :roles')
-            ->setParameter('roles', '%' . UserRole::ROLES['Admin'] . '%')
+            ->setParameter('roles', '%' . UserRole::Admin . '%')
             ->getQuery()
             ->getResult();
     }

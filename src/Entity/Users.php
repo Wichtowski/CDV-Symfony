@@ -21,7 +21,7 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180)]
     private string $email;
 
-    #[ORM\Column(type: 'json', nullable: true)]
+    #[ORM\Column(type: 'json')]
     private array $roles = [];
 
     #[ORM\Column]
@@ -64,23 +64,19 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-
-        $roles[] = 'ROLE_GUEST'; // UserRole::ROLES;
-
-        return array_unique($roles);
+        return array_map(fn($role) => $role->value, $this->roles);
     }
 
     public function setRoles(array $roles): static
     {
-        $this->roles = $roles;
+        $this->roles = array_map(fn($role) => is_string($role) ? UserRole::from($role) : $role, $roles);
 
         return $this;
     }
     
     public function addRole(string $role): static
     {
-        $this->roles[] = $role;
+        $this->roles[] = UserRole::from($role);
 
         return $this;
     }

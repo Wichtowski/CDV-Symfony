@@ -1,13 +1,12 @@
 <?php
+
 namespace App\Entity;
 
-class UserRole
+enum UserRole: string
 {
-    public const ROLES = [
-        'Admin' => 'ROLE_ADMIN',
-        'Moderator' => 'ROLE_MODERATOR',
-        'Author' => 'ROLE_AUTHOR',
-        'Subscriber' => 'ROLE_SUBSCRIBER',
-        'Guest' => 'ROLE_GUEST',
-    ];
+    case Admin = 'ROLE_ADMIN';
+    case Moderator = 'ROLE_MODERATOR';
+    case Author = 'ROLE_AUTHOR';
+    case Subscriber = 'ROLE_SUBSCRIBER';
+    case Guest = 'ROLE_GUEST';
 }
