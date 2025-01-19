@@ -2,6 +2,7 @@
 namespace App\Entity;
 
 use App\Repository\ArticlesRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ArticlesRepository::class)]
@@ -27,6 +28,9 @@ class Articles
 
     #[ORM\Column(options: ["default" => false])]
     private ?bool $isPublished = false;
+
+    #[ORM\Column(type: Types::DATETIMETZ_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $scheduled_publishing_date = null;
 
     public function getId(): ?int
     {
@@ -85,6 +89,18 @@ class Articles
     public function setPublished(bool $isPublished): static
     {
         $this->isPublished = $isPublished;
+
+        return $this;
+    }
+
+    public function getScheduledPublishingDate(): ?\DateTimeInterface
+    {
+        return $this->scheduled_publishing_date;
+    }
+
+    public function setScheduledPublishingDate(\DateTimeInterface $scheduled_publishing_date): static
+    {
+        $this->scheduled_publishing_date = $scheduled_publishing_date;
 
         return $this;
     }
