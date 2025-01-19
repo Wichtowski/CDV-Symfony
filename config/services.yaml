@@ -21,16 +21,15 @@ services:
             - "../src/Kernel.php"
     # config/services.yaml
 
-    # App\Controller\ErrorController:
-    #     public: true
-    #     tags:
-    #         - { name: controller.service_arguments }
+    App\Controller\ErrorController:
+        public: true
+        tags:
+            - { name: controller.service_arguments }
 
     # App\Service\PermissionService:
     #     arguments: []
-# framework:
-#     error_controller: App\Controller\ErrorController::show
-
+framework:
+    error_controller: App\Controller\ErrorController::show
 # App\Service\MongoDBLogger:
 #     arguments:
 #         $server: '%mongodb.server%'

@@ -13,7 +13,9 @@ class ApiResponseFormatter
     private string $message = 'success';
     private array $errors = [];
     private int $status = Response::HTTP_OK;
-    private array  $additionalData = [];
+    private array $additionalData = [];
+    private bool $includeData = true;
+    private bool $includeAdditionalData = true;
 
     public function withData(array $data): self
     {
@@ -50,17 +52,37 @@ class ApiResponseFormatter
         return $this;
     }
 
-    public function response(): JsonResponse
+    public function withoutData(): self
     {
-        return new JsonResponse(
-            [
-                'data' => $this->data,
-                'message' => $this->message,
-                'errors' => $this->errors,
-                'status' => $this->status,
-                'additionalData' => $this->additionalData
-            ], $this->status
-        );
+        $this->includeData = false;
+        $this->includeAdditionalData = false;
+
+        return $this;
     }
 
+    public function withoutAdditionalData(): self
+    {
+        $this->includeAdditionalData = false;
+
+        return $this;
+    }
+
+    public function response(): JsonResponse
+    {
+        $response = [];
+
+        if ($this->includeData) {
+            $response['data'] = $this->data;
+        }
+
+        $response['message'] = $this->message;
+        $response['errors'] = $this->errors;
+        $response['status'] = $this->status;
+
+        if ($this->includeAdditionalData) {
+            $response['additionalData'] = $this->additionalData;
+        }
+
+        return new JsonResponse($response, $this->status);
+    }
 }
