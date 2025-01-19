@@ -30,7 +30,7 @@ class Articles
     private ?bool $isPublished = false;
 
     #[ORM\Column(type: Types::DATETIMETZ_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $scheduled_publishing_date = null;
+    private ?\DateTimeInterface $scheduledPublishingDate = null;
 
     public function getId(): ?int
     {
@@ -95,12 +95,12 @@ class Articles
 
     public function getScheduledPublishingDate(): ?\DateTimeInterface
     {
-        return $this->scheduled_publishing_date;
+        return $this->scheduledPublishingDate;
     }
 
-    public function setScheduledPublishingDate(\DateTimeInterface $scheduled_publishing_date): static
+    public function setScheduledPublishingDate(\DateTimeInterface $scheduledPublishingDate): static
     {
-        $this->scheduled_publishing_date = $scheduled_publishing_date;
+        $this->scheduledPublishingDate = $scheduledPublishingDate;
 
         return $this;
     }
