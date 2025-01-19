@@ -65,8 +65,8 @@ class UsersRepository extends ServiceEntityRepository implements PasswordUpgrade
 
     public function findAllAuthors(): array
     {
-        $sql = 'SELECT * FROM "users" WHERE CAST("roles" AS text) ~ :role';
-        $result = $this->entityManager->getConnection()->executeQuery($sql, ['role' => 'ROLE_AUTHOR']);
+        $sql = 'SELECT * FROM users WHERE roles::jsonb @> \'["ROLE_AUTHOR"]\'';
+        $result = $this->entityManager->getConnection()->executeQuery($sql);
         return $this->entityManager->getRepository(Users::class)->findBy(['id' => array_column($result->fetchAllAssociative(), 'id')]);
     }
 
