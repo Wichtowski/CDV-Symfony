@@ -11,7 +11,8 @@ class ErrorController
     public function __construct(private ApiResponseFormatter $apiResponseFormatter) {}
     public function show(\Throwable $exception): JsonResponse
     {
-        $message = match ($exception->getStatusCode()) {
+        $statusCode = method_exists($exception, 'getStatusCode') ? $exception->getStatusCode() : 500;
+        $message = match ($statusCode) {
             404 => 'Resource not found',
             403 => 'Access denied',
             500 => 'Internal server error',
@@ -21,7 +22,7 @@ class ErrorController
         return $this->apiResponseFormatter
             ->withErrors([$exception->getMessage()])
             ->withoutData()
-            ->withStatus($exception->getStatusCode() ?: 500)
+            ->withStatus($statusCode)
             ->withMessage($message)
             ->response();
     }
